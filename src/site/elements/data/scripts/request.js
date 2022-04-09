@@ -8,9 +8,10 @@ const defaultRequestHeaders = [
 
 async function requestDeclarativeNetRequestPermission() {
     const requiredPermissions = {
-        permissions: ['declarativeNetRequestWithHostAccess'],
+        permissions: ['declarativeNetRequest', 'declarativeNetRequestWithHostAccess'],
     };
 
+    // TODO: Doesn't seem to work with optional_permissions
     const granted = await chrome.permissions.request(requiredPermissions);
     if (!granted) {
         throw new Error('declarativeNetRequestWithHostAccess permission not granted');
@@ -156,7 +157,7 @@ export async function send(request) {
         const addRules = [{
             action: {
                 type: "modifyHeaders",
-                requestHeaders,
+                requestHeaders: requestHeaders.length > 0 ? requestHeaders : undefined,
                 responseHeaders,
             },
             condition: {
